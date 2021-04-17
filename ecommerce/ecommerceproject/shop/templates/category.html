@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        welcome to ABC store where you can buys different items...
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{category.name}}-ABC store
+    {% else %}
+        see our new collections-ABC store
+    {% endif %}
+{% endblock %}
+{% block content %}
+{% if category %}
+<div class="container">
+    <div class="row my-row-class">
+        <div class="mx-auto">
+            <p><a href="{% url 'shop:allproductcat' %}">
+                our product collections
+            </a> </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container mx-auto">
+    {% if category %}
+    <img class="my-image" src="{{category.image.url}}" alt="{{category.name}}"width="100%" height="100%">
+</div>
+<br>
+<div>
+    <h1 class="text-center my-title">{{category.name}}</h1>
+    <p class="container text-justify">{{category.description}}</p>
+</div>
+    {% else %}
+<div>
+    <img class="my-image my-image-padding" src="{% static 'img/banner2 .png' %}" alt="our products" width="100%" height="100%">
+</div>
+<br>
+<div>
+    <h1 class="text-center my-title">our products collections</h1>
+    <p class="text-justify">
+        Traditionally, content was edited and tailored to the public through news
+        editors, authors, and other kinds of content creators. However, not all
+        information content requires creative authoring or editing.
+        Through recent technological developments, truth is found in philosopher
+        Marshall McLuhan's idea of a global village;
+    </p>
+</div>
+    {% endif %}
+<div class="container">
+    <div class="row">
+        {% for product in products.object_list %}
+        <div class="my-bottom-margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:18rem;">
+                <a href="{{product.get_url}}"><img class="card-img-top my-image" src="{{product.image.url}}" alt="{{product.name}}"width="200" height="200"></a>
+                <div class="card-body">
+                    <h4>{{product.name}}</h4>
+                    <p>{{product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
